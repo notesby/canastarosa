@@ -3,7 +3,9 @@ Entrevista tecnica canasta rosa python developer
 
 # Curl scripts
 
-## Post
+## Store
+
+### Post
 
 curl --location --request POST 'localhost:8000/store/' \
 --header 'Content-Type: application/json' \
@@ -29,7 +31,53 @@ curl --location --request POST 'localhost:8000/store/' \
     ]
 }'
 
-## Get
+### Get
 
 curl --location --request GET 'localhost:8000/store/' \
 --header 'Content-Type: application/json'
+
+## Product
+
+### Post
+
+curl --location --request POST 'localhost:8000/product/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"name":"product_test7",
+	"slug":"product_test7",
+	"price": 102.10,
+	"elaboration_time": 0,
+	"store": 2
+}'
+
+### Get
+
+curl --location --request GET 'localhost:8000/product/'
+
+
+## Order
+
+### Post
+
+
+#### Error 
+
+curl --location --request POST 'localhost:8000/order/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"store": 2,
+	"products": [5,7],
+	"delivery_date": "2020-02-05",
+	"order_price": 0.00
+}'
+
+#### Success
+
+curl --location --request POST 'localhost:8000/order/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+	"store": 2,
+	"products": [7],
+	"delivery_date": "2020-02-05",
+	"order_price": 0.00
+}' 

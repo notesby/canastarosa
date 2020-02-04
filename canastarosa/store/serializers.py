@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from store.models import Store,StoreSchedule,Product,PurchaseOrder
+from datetime import date
 
 
 class StoreScheduleSerializer(serializers.ModelSerializer):
@@ -29,3 +30,28 @@ class PurchaseOrderSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = PurchaseOrder
 		fields = ['delivery_date', 'store', 'order_price', 'products']
+
+	def validate(self,data):
+		products_data = data['products']
+		remainingdays = (data["delivery_date"]-date.today()).days
+		schedules = StoreSchedule.objects.filter(store=data["store"])
+		workingdays = set([schedule.weekday for schedule in schedules])
+		order_price = 0
+		for product in products_data:
+			#product = Product.objects.get(pk=product_id)
+			order_price += product.price
+			if product.elaboration_time > 0:
+				if product.elaboration_time > remainingdays:
+					raise serializers.ValidationError(f"Lo sentimos pero la tienda no puede entregar el pedido el dia {data['delivery_date']}")
+				else:
+					count = 0
+					for i in range(remainingdays):
+						today = date.today()
+						nextDay = date(day=today.day + i,month=today.month,year=today.year)
+						if nextDay.isoweekday() in workingdays:
+							count += 1
+					if product.elaboration_time - count > 0:
+						raise serializers.ValidationError(f"Lo sentimos pero la tienda no puede entregar el pedido el dia {data['delivery_date']}")
+		data["order_price"] = order_price
+		return data
+

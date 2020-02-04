@@ -52,10 +52,12 @@ def ProductRequest(request):
 			serializer.save()
 			return JsonResponse(serializer.data, status=200)
 		return JsonResponse(serializer.errors, status=400)
+
+
 @csrf_exempt
 def PurchaseOrderRequest(request):
 	if request.method == 'GET':
-		snippets = Store.objects.all()
+		snippets = PurchaseOrder.objects.all()
 		serializer = PurchaseOrderSerializer(snippets, many=True)
 		return JsonResponse(serializer.data, safe=False)
 	elif request.method == 'POST':
@@ -65,7 +67,7 @@ def PurchaseOrderRequest(request):
 		serializer = PurchaseOrderSerializer(data=data)
 		if serializer.is_valid():
 			serializer.save()
-			return JsonResponse(serializer.data, status=201)
+			return JsonResponse(serializer.data, status=200)
 		return JsonResponse(serializer.errors, status=400)
 
 
