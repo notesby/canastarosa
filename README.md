@@ -1,6 +1,29 @@
 # Canasta Rosa
 Entrevista tecnica canasta rosa python developer
 
+# Requirements
+
+Docker
+django==3.0.3
+djangorestframework==3.11.0
+django-filter==2.2.0
+psycopg2-binary==2.8.3
+
+
+# Instructions
+
+## Build container
+
+docker-compose build
+
+## Run server
+
+docker-compose up -d
+
+## Migrations
+
+docker-compose exec web python manage.py migrate
+
 # Curl scripts
 
 ## Store
